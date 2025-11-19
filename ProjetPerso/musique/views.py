@@ -1,31 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Musique
-
 def musique_list(request):
-    musiques = Musique.objects.all()
-
-    # Gestion du formulaire (CREATE ou UPDATE)
+    # CREATE
     if request.method == "POST":
-        musique_id = request.POST.get("musique_id")
-        titre = request.POST.get("titre")
-        artiste = request.POST.get("artiste")
-        duree = request.POST.get("duree")
-        genre = request.POST.get("genre")
-
-        if musique_id:  # UPDATE
+        action = request.POST.get("action")
+        if action == "add":
+            title = request.POST.get("title")
+            artist = request.POST.get("artist")
+            duration = request.POST.get("duration")
+            genre = request.POST.get("genre")
+            Musique.objects.create(title=title, artist=artist, duration=duration, genre=genre)
+        elif action == "edit":
+            musique_id = request.POST.get("musique_id")
             musique = get_object_or_404(Musique, id=musique_id)
-            musique.title = titre
-            musique.artist = artiste
-            musique.duration = duree
-            musique.genre = genre
+            musique.title = request.POST.get("title")
+            musique.artist = request.POST.get("artist")
+            musique.duration = request.POST.get("duration")
+            musique.genre = request.POST.get("genre")
             musique.save()
-        else:  # CREATE
-            Musique.objects.create(
-                title=titre,
-                artist=artiste,
-                duration=duree,
-                genre=genre
-            )
+        elif action == "delete":
+            musique_id = request.POST.get("musique_id")
+            musique = get_object_or_404(Musique, id=musique_id)
+            musique.delete()
         return redirect("musique_list")
 
+    musiques = Musique.objects.all()
     return render(request, "musique/musique_list.html", {"musiques": musiques})
+

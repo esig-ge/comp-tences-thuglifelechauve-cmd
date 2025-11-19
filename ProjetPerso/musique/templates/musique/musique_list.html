@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>Liste des musiques</title>
-<body>TEST</body>
+    <link rel="stylesheet" href="{% static 'musique/style.css' %}">
+</head>
+<body>
+    <h1>Liste des musiques</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Artiste</th>
+                <th>Durée</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for musique in musiques %}
+            <tr>
+                <td>{{ musique.title }}</td>
+                <td>{{ musique.artist }}</td>
+                <td>{{ musique.duration }}</td>
+                <td>{{ musique.genre }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">Aucune musique disponible</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
