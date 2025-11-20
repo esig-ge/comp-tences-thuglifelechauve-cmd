@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -8,29 +7,81 @@
     <link rel="stylesheet" href="{% static 'musique/style.css' %}">
 </head>
 <body>
-    <h1>Liste des musiques</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Artiste</th>
-                <th>Durée</th>
-                <th>Genre</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for musique in musiques %}
-            <tr>
-                <td>{{ musique.title }}</td>
-                <td>{{ musique.artist }}</td>
-                <td>{{ musique.duration }}</td>
-                <td>{{ musique.genre }}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="4">Aucune musique disponible</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h1>Liste des musiques</h1>
+
+<!-- Bouton d'ajout -->
+<button class="add-btn" onclick="openAddModal()">Ajouter une musique</button>
+
+<!-- Tableau des musiques -->
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Artiste</th>
+            <th>Durée</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for musique in musiques %}
+        <tr>
+            <td>{{ musique.title }}</td>
+            <td>{{ musique.artist }}</td>
+            <td>{{ musique.duration }}</td>
+            <td>{{ musique.genre }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">Aucune musique disponible</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal : Ajouter une musique -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <h3>Ajouter une musique</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+
+            <p>
+                Titre:<br>
+                <input type="text" name="title" required>
+            </p>
+
+            <p>
+                Artiste:<br>
+                <input type="text" name="artist" required>
+            </p>
+
+            <p>
+                Durée:<br>
+                <input type="text" name="duration">
+            </p>
+
+            <p>
+                Genre:<br>
+                <input type="text" name="genre">
+            </p>
+
+            <button type="submit">Ajouter</button>
+            <button type="button" onclick="closeAddModal()">Annuler</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openAddModal() {
+    document.getElementById('addModal').style.display = 'block';
+}
+
+function closeAddModal() {
+    document.getElementById('addModal').style.display = 'none';
+}
+</script>
+
 </body>
 </html>
