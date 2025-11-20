@@ -1,86 +1,101 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <title>Liste des musiques</title>
-    <link rel="stylesheet" href="{% static 'musique/style.css' %}">
+<meta charset="UTF-8">
+<title>Liste des musiques</title>
+<style>
+body { font-family: Arial; margin: 40px; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px;}
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left;}
+th { background-color: #4CAF50; color: white; }
+button { margin: 2px; padding: 5px 10px; }
+.modal { display: none; position: fixed; top: 0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5);}
+.modal-content { background:#fff; margin: 15% auto; padding: 20px; width: 300px; border-radius: 5px;}
+</style>
 </head>
 <body>
-
 <h1>Liste des musiques</h1>
 
-<!-- Bouton d'ajout -->
-<button class="add-btn" onclick="openAddModal()">Ajouter une musique</button>
+<button onclick="openAddModal()">Ajouter une musique</button>
 
-<!-- Tableau des musiques -->
 <table>
-    <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Artiste</th>
-            <th>Durée</th>
-            <th>Genre</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for musique in musiques %}
-        <tr>
-            <td>{{ musique.title }}</td>
-            <td>{{ musique.artist }}</td>
-            <td>{{ musique.duration }}</td>
-            <td>{{ musique.genre }}</td>
-        </tr>
-    {% empty %}
-        <tr>
-            <td colspan="4">Aucune musique disponible</td>
-        </tr>
-    {% endfor %}
-    </tbody>
+<thead>
+<tr>
+<th>Titre</th><th>Artiste</th><th>Durée</th><th>Genre</th><th>Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for musique in musiques %}
+<tr>
+<td>{{ musique.title }}</td>
+<td>{{ musique.artist }}</td>
+<td>{{ musique.duration }}</td>
+<td>{{ musique.genre }}</td>
+<td>
+  <!-- Modifier -->
+  <button onclick="openEditModal({{ musique.id }}, '{{ musique.title }}', '{{ musique.artist }}', '{{ musique.duration }}', '{{ musique.genre }}')">Modifier</button>
+  <!-- Supprimer -->
+  <form style="display:inline;" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="musique_id" value="{{ musique.id }}">
+    <button type="submit">Supprimer</button>
+  </form>
+</td>
+</tr>
+{% empty %}
+<tr><td colspan="5">Aucune musique disponible</td></tr>
+{% endfor %}
+</tbody>
 </table>
 
-<!-- Modal : Ajouter une musique -->
+<!-- Modal Ajouter -->
 <div id="addModal" class="modal">
-    <div class="modal-content">
-        <h3>Ajouter une musique</h3>
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="add">
+  <div class="modal-content">
+    <h3>Ajouter une musique</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+      <p>Titre:<br><input type="text" name="title" required></p>
+      <p>Artiste:<br><input type="text" name="artist" required></p>
+      <p>Durée:<br><input type="number" name="duration"></p>
+      <p>Genre:<br><input type="text" name="genre"></p>
+      <button type="submit">Ajouter</button>
+      <button type="button" onclick="closeAddModal()">Annuler</button>
+    </form>
+  </div>
+</div>
 
-            <p>
-                Titre:<br>
-                <input type="text" name="title" required>
-            </p>
-
-            <p>
-                Artiste:<br>
-                <input type="text" name="artist" required>
-            </p>
-
-            <p>
-                Durée:<br>
-                <input type="text" name="duration">
-            </p>
-
-            <p>
-                Genre:<br>
-                <input type="text" name="genre">
-            </p>
-
-            <button type="submit">Ajouter</button>
-            <button type="button" onclick="closeAddModal()">Annuler</button>
-        </form>
-    </div>
+<!-- Modal Modifier -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>Modifier une musique</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="edit">
+      <input type="hidden" name="musique_id" id="edit_id">
+      <p>Titre:<br><input type="text" name="title" id="edit_title" required></p>
+      <p>Artiste:<br><input type="text" name="artist" id="edit_artist" required></p>
+      <p>Durée:<br><input type="number" name="duration" id="edit_duration"></p>
+      <p>Genre:<br><input type="text" name="genre" id="edit_genre"></p>
+      <button type="submit">Modifier</button>
+      <button type="button" onclick="closeEditModal()">Annuler</button>
+    </form>
+  </div>
 </div>
 
 <script>
-function openAddModal() {
-    document.getElementById('addModal').style.display = 'block';
+function openAddModal() { document.getElementById('addModal').style.display='block'; }
+function closeAddModal() { document.getElementById('addModal').style.display='none'; }
+function openEditModal(id, title, artist, duration, genre) {
+  document.getElementById('edit_id').value = id;
+  document.getElementById('edit_title').value = title;
+  document.getElementById('edit_artist').value = artist;
+  document.getElementById('edit_duration').value = duration;
+  document.getElementById('edit_genre').value = genre;
+  document.getElementById('editModal').style.display='block';
 }
-
-function closeAddModal() {
-    document.getElementById('addModal').style.display = 'none';
-}
+function closeEditModal() { document.getElementById('editModal').style.display='none'; }
 </script>
 
 </body>
