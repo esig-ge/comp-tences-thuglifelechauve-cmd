@@ -1,0 +1,14 @@
+{% extends 'music/base.html' %}
+
+{% block title %}Supprimer la Musique{% endblock %}
+
+{% block content %}
+<h2>Supprimer {{ musique.titre }} ?</h2>
+<p>Êtes-vous sûr de vouloir supprimer la musique "{{ musique.titre }}" de {{ musique.artiste }} ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+    <a href="{% url 'musique_detail' musique.pk %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

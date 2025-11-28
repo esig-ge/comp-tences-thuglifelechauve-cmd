@@ -1,0 +1,18 @@
+{% extends 'music/base.html' %}
+
+{% block title %}Liste des Musiques{% endblock %}
+
+{% block content %}
+<h2>Ma Liste de Musique</h2>
+<div class="music-list">
+    {% for musique in musiques %}
+    <div class="music-item">
+        <h3><a href="{% url 'musique_detail' musique.pk %}">{{ musique.titre }}</a></h3>
+        <p>Artiste: {{ musique.artiste }}</p>
+        <p>Style: {{ musique.style }}</p>
+    </div>
+    {% empty %}
+    <p>Aucune musique enregistrée.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ma Musique{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'musique_list' %}">Ma Collection de Musique</a></h1>
+        <nav>
+            <a href="{% url 'musique_list' %}">Accueil</a>
+            <a href="{% url 'musique_add' %}">Ajouter une musique</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 - Projet CRUD Musique</p>
+    </footer>
+</body>
+</html>

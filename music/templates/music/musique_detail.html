@@ -1,0 +1,18 @@
+{% extends 'music/base.html' %}
+
+{% block title %}{{ musique.titre }}{% endblock %}
+
+{% block content %}
+<div class="music-detail">
+    <h2>{{ musique.titre }}</h2>
+    <p><strong>Artiste:</strong> {{ musique.artiste }}</p>
+    <p><strong>Durée:</strong> {{ musique.duree }} secondes</p>
+    <p><strong>Style:</strong> {{ musique.style }}</p>
+
+    <div class="actions">
+        <a href="{% url 'musique_edit' musique.pk %}" class="btn">Modifier</a>
+        <a href="{% url 'musique_delete' musique.pk %}" class="btn btn-danger">Supprimer</a>
+        <a href="{% url 'musique_list' %}" class="btn">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}
